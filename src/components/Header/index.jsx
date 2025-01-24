@@ -1,14 +1,40 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import Logo from "../../assets/logo.png";
+import DarkMode from "../../assets/darkMode.svg";
+import LightMode from "../../assets/lightMode.svg";
 
 const Header = () => {
-  const activeClass = "text-blue-700";
-  const inActiveClass = "text-gray-700";
+  const activeClass = "text-blue-700 ";
+  const inActiveClass = "text-gray-700 dark:text-white";
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const [darkMode, setDarkMode] = useState(() => {
+    try {
+      const savedMode = localStorage.getItem("darkMode");
+      return savedMode !== null ? JSON.parse(savedMode) : true;
+    } catch (error) {
+      console.error("Failed to parse darkMode from localStorage:", error);
+      return true;
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("darkMode", JSON.stringify(darkMode));
+
+      if (darkMode) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    } catch (error) {
+      console.error("Failed to save darkMode to localStorage:", error);
+    }
+  }, [darkMode]);
 
   // const toggleMenu = () => {
   //   setIsMenuOpen((prev) => !prev);
@@ -16,7 +42,7 @@ const Header = () => {
 
   return (
     <header>
-      <nav className=" border-gray- max-[1400px] m-auto  dark:bg-gray-900 p-4">
+      <nav className=" border-gray- max-[1400px] m-auto  dark:bg-gray-900 p-4 dark:text-white">
         <div className="flex justify-between flex-wrap">
           <Link to="/" className="flex items-center gap-3 md:mb-2">
             <img src={Logo} className="h-8" alt="Flowbite Logo" />
@@ -51,8 +77,23 @@ const Header = () => {
             <span className="sr-only">Toggle navigation</span>
           </button>
 
-          <div className={`${isMenuOpen ? "hidden" : "block"}  md:w-full`}>
-            <ul className="flex gap-6 text-[18px] md:flex-col	 md:w-full md:items-center  ">
+          <button
+            className="w-[18px] h-[18px] cursor-pointer"
+            onClick={() => setDarkMode(!darkMode)}
+          >
+            {darkMode ? (
+              <div className="border border-solid rounded-md p-1 bg-slate-100">
+                <img src={DarkMode} alt="DarkMode" />
+              </div>
+            ) : (
+              <div className="border border-solid rounded-md p-1 bg-slate-100">
+                <img src={LightMode} alt="DarkMode" />
+              </div>
+            )}
+          </button>
+
+          <div className={`${isMenuOpen ? "hidden" : "block"}  md:w-full `}>
+            <ul className="flex gap-6 text-[18px] md:flex-col	 md:w-full md:items-center dark:text-white ">
               <li>
                 <NavLink
                   to="/"
@@ -97,7 +138,7 @@ const Header = () => {
             </ul>
           </div>
 
-          <div className="flex items-center gap-2  md:w-full md:mt-2">
+          <div className="flex items-center gap-2  md:w-full md:mt-2 ">
             <button
               type="button"
               data-collapse-toggle="navbar-search"
