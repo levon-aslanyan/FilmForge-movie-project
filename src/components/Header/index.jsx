@@ -9,7 +9,7 @@ import LightMode from "../../assets/lightMode.svg";
 const Header = () => {
   const activeClass = "text-blue-700 ";
   const inActiveClass = "text-gray-700 dark:text-white";
-
+ 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const [darkMode, setDarkMode] = useState(() => {
