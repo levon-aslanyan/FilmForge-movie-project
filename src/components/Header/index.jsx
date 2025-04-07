@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import Logo from "../../assets/logo.png";
 import DarkMode from "../../assets/darkMode.svg";
 import LightMode from "../../assets/lightMode.svg";
@@ -9,9 +9,9 @@ import LightMode from "../../assets/lightMode.svg";
 const Header = () => {
   const activeClass = "text-blue-700 ";
   const inActiveClass = "text-gray-700 dark:text-white";
- 
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
   const [darkMode, setDarkMode] = useState(() => {
     try {
       const savedMode = localStorage.getItem("darkMode");
@@ -35,6 +35,14 @@ const Header = () => {
       console.error("Failed to save darkMode to localStorage:", error);
     }
   }, [darkMode]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const queryTerm = e.target.search.value;
+    e.target.reset();
+
+    return navigate(`/search?q=${queryTerm}`);
+  };
 
   // const toggleMenu = () => {
   //   setIsMenuOpen((prev) => !prev);
@@ -92,7 +100,11 @@ const Header = () => {
             )}
           </button>
 
-          <div className={`${isMenuOpen ? "hidden" : "block"}  md:w-full `}>
+          <div
+            className={`${
+              isMenuOpen ? "hidden" : "block"
+            } md:flex md:order-2  md:w-full `}
+          >
             <ul className="flex gap-6 text-[18px] md:flex-col	 md:w-full md:items-center dark:text-white ">
               <li>
                 <NavLink
@@ -138,7 +150,7 @@ const Header = () => {
             </ul>
           </div>
 
-          <div className="flex items-center gap-2  md:w-full md:mt-2 ">
+          <div className="flex items-center gap-2 md:order-1  md:w-full md:mt-2 ">
             <button
               type="button"
               data-collapse-toggle="navbar-search"
@@ -167,14 +179,16 @@ const Header = () => {
               <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                 <span className="sr-only pl-3 block">Search icon</span>
               </div>
-
-              <input
-                type="search"
-                className="border p-[2px] border-gray-600 rounded md:w-full"
-                id="search-navbar"
-                placeholder="Search..."
-                autoComplete="off"
-              />
+              <form onSubmit={handleSubmit}>
+                <input
+                  type="search"
+                  name="search"
+                  className="border p-[2px] border-gray-600 rounded md:w-full"
+                  id="search-navbar"
+                  placeholder="Search..."
+                  autoComplete="off"
+                />
+              </form>
             </div>
           </div>
         </div>
