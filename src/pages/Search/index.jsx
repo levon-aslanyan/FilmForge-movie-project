@@ -1,11 +1,14 @@
 import { useSearchParams } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
 import Card from "../../components/molecules/Card";
 
 const Search = ({ apiPath }) => {
   const [searhParams] = useSearchParams();
   const queryTerm = searhParams.get("q");
   const { data: movies } = useFetch(apiPath, queryTerm);
+
+  useDocumentTitle(`Search result for ${queryTerm}`);
 
   return (
     <main>
