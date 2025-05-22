@@ -1,8 +1,10 @@
 import useFetch from "../../hooks/useFetch";
 import Card from "../../components/molecules/Card";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
 
-const MovieList = ({ apiPath }) => {
+const MovieList = ({ apiPath, title }) => {
   const { data: movies } = useFetch(apiPath);
+  useDocumentTitle(`${title}`);
 
   return (
     <main>
